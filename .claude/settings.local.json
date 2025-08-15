@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(mkdir:*)",
+      "Bash(mv:*)",
+      "Bash(rm:*)",
+      "Bash(find:*)",
+      "Bash(for file in *.java)",
+      "Bash(do)",
+      "Bash(if [[ -f \"$file\" ]])",
+      "Bash(then)",
+      "Bash(sed:*)",
+      "Bash(fi)",
+      "Bash(done)",
+      "Bash(grep:*)"
+    ],
+    "defaultMode": "acceptEdits"
+  }
+}
