@@ -32,19 +32,59 @@ A comprehensive monitoring plugin for Selenium WebDriver tests that leverages We
 
 ## Quick Start
 
-### 1. Add Dependency
+### 1. Installation
 
-Add SeleniumIQ to your Maven project:
+**Option A: Download Pre-built JAR (Recommended)**
+
+1. **Download the latest JAR** from [GitHub Releases](https://github.com/yourusername/seleniumiq/releases)
+   - `seleniumiq-core-1.0.0.jar` (requires dependencies in your project)
+   - `seleniumiq-core-1.0.0-standalone.jar` (includes all dependencies)
+
+2. **Add to your Maven project:**
 
 ```xml
+<!-- For regular JAR -->
 <dependency>
     <groupId>com.seleniumiq</groupId>
     <artifactId>seleniumiq-core</artifactId>
     <version>1.0.0</version>
+    <scope>system</scope>
+    <systemPath>${project.basedir}/lib/seleniumiq-core-1.0.0.jar</systemPath>
+</dependency>
+
+<!-- OR for standalone JAR (no other dependencies needed) -->
+<dependency>
+    <groupId>com.seleniumiq</groupId>
+    <artifactId>seleniumiq-core</artifactId>
+    <version>1.0.0</version>
+    <scope>system</scope>
+    <systemPath>${project.basedir}/lib/seleniumiq-core-1.0.0-standalone.jar</systemPath>
 </dependency>
 ```
 
-### 2. Configure LLM Provider
+**Option B: Build from Source**
+
+```bash
+git clone https://github.com/yourusername/seleniumiq.git
+cd seleniumiq
+./build.sh
+# Copy target/seleniumiq-core-1.0.0.jar to your project
+```
+
+### 2. Project Structure
+
+Create a `lib/` directory in your project root and place the downloaded JAR:
+
+```
+your-selenium-project/
+├── src/
+├── lib/
+│   └── seleniumiq-core-1.0.0-standalone.jar  ← Place JAR here
+├── pom.xml
+└── ...
+```
+
+### 3. Configure LLM Provider
 
 Set your API key as an environment variable:
 
@@ -52,7 +92,7 @@ Set your API key as an environment variable:
 export OPENAI_API_KEY="your-api-key-here"
 ```
 
-### 3. Enable Monitoring in Your Tests
+### 4. Enable Monitoring in Your Tests
 
 ```java
 @ExtendWith(SeleniumIQWatcher.class)
@@ -471,6 +511,52 @@ For questions and support:
 - 📧 Email: support@seleniumiq.com
 - 💬 GitHub Issues: [Create an issue](https://github.com/seleniumiq/issues)
 - 📖 Documentation: [Full documentation](https://docs.seleniumiq.com)
+
+---
+
+## 📦 Distribution & Releases
+
+SeleniumIQ is distributed through **GitHub Releases** with pre-built JARs for easy integration.
+
+### Release Process
+
+1. **Automated Builds**: Every release is automatically built using GitHub Actions
+2. **Two JAR Options**: 
+   - Standard JAR (requires Selenium, Jackson, etc. in your project)
+   - Standalone JAR (includes all dependencies - just drop in and use)
+3. **Quality Assurance**: All JARs are tested before release
+
+### Version Compatibility
+
+| SeleniumIQ Version | Java Version | Selenium Version |
+|-------------------|--------------|------------------|
+| 1.0.0+            | 11+          | 4.19.1+          |
+
+### Future Plans
+
+- **Maven Central**: We plan to publish to Maven Central for easier dependency management
+- **Gradle Plugin**: Native Gradle integration
+- **Additional LLM Providers**: Anthropic Claude, Azure OpenAI support
+
+## 🔄 Building from Source
+
+For contributors and advanced users:
+
+```bash
+# Clone the repository
+git clone https://github.com/yourusername/seleniumiq.git
+cd seleniumiq
+
+# Build with the provided script
+./build.sh
+
+# Or manually with Maven
+mvn clean package assembly:single
+```
+
+**Generated artifacts:**
+- `target/seleniumiq-core-1.0.0.jar` - Regular JAR
+- `target/seleniumiq-core-1.0.0-jar-with-dependencies.jar` - Standalone JAR
 
 ---
 

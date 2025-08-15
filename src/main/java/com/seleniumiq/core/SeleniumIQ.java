@@ -292,8 +292,20 @@ public class SeleniumIQ {
         try {
             List<BrowserEvent> allEvents = eventCollector.getAllEvents(session.getId());
             if (!allEvents.isEmpty()) {
-                reportGenerator.generateSessionReport(session, allEvents);
-                logger.info("Generated report for session: {}", session.getName());
+                // Get final analysis for the session
+                analysisService.analyzeEvents(allEvents, session)
+                    .thenAccept(analysisResult -> {
+                        // Generate report with analysis results
+                        reportGenerator.generateSessionReport(session, allEvents, analysisResult);
+                        logger.info("Generated report with AI analysis for session: {}", session.getName());
+                    })
+                    .exceptionally(throwable -> {
+                        // Generate report without analysis if analysis fails
+                        reportGenerator.generateSessionReport(session, allEvents);
+                        logger.warn("Generated report without AI analysis for session: {} - analysis failed: {}", 
+                                  session.getName(), throwable.getMessage());
+                        return null;
+                    });
             }
         } catch (Exception e) {
             logger.error("Failed to generate report for session: {}", session.getName(), e);
