@@ -1,7 +1,7 @@
 package com.seleniumiq.core;
 
 import com.seleniumiq.config.MonitorConfig;
-import com.seleniumiq.events.EventCollector;
+import com.seleniumiq.events.BiDiEventCollector;
 import com.seleniumiq.analysis.LLMAnalysisService;
 import com.seleniumiq.reporting.ReportGenerator;
 import com.seleniumiq.model.MonitoringSession;
@@ -33,7 +33,7 @@ public class SeleniumIQ {
     private static final Logger logger = LoggerFactory.getLogger(SeleniumIQ.class);
     
     private final MonitorConfig config;
-    private final EventCollector eventCollector;
+    private final BiDiEventCollector eventCollector;
     private final LLMAnalysisService analysisService;
     private final ReportGenerator reportGenerator;
     private final ScheduledExecutorService analysisScheduler;
@@ -49,7 +49,7 @@ public class SeleniumIQ {
      */
     private SeleniumIQ() {
         this.config = MonitorConfig.load();
-        this.eventCollector = new EventCollector(config);
+        this.eventCollector = new BiDiEventCollector(config);
         this.analysisService = new LLMAnalysisService(config);
         this.reportGenerator = new ReportGenerator(config);
         this.analysisScheduler = Executors.newScheduledThreadPool(2);
@@ -175,23 +175,50 @@ public class SeleniumIQ {
     }
     
     /**
-     * Configure WebDriver options to enable monitoring support
+     * Configure WebDriver options to enable BiDi and DevTools monitoring
      * 
      * @param options The browser options to configure
-     * @return The configured options with monitoring enabled
+     * @return The configured options with BiDi/DevTools enabled
      */
     public static <T> T enableMonitoring(T options) {
         if (options instanceof ChromeOptions) {
-            ((ChromeOptions) options).setCapability("webSocketUrl", true);
-            logger.debug("Enabled monitoring for Chrome");
+            ChromeOptions chromeOptions = (ChromeOptions) options;
+            
+            // Enable BiDi protocol
+            chromeOptions.setCapability("webSocketUrl", true);
+            
+            // Enable DevTools for real event capture
+            chromeOptions.addArguments("--enable-automation");
+            chromeOptions.addArguments("--enable-logging");
+            chromeOptions.addArguments("--log-level=0");
+            
+            // Disable web security for better event capture (only for testing)
+            chromeOptions.addArguments("--disable-web-security");
+            chromeOptions.addArguments("--disable-features=VizDisplayCompositor");
+            
+            logger.debug("Enabled BiDi and DevTools monitoring for Chrome");
+            
         } else if (options instanceof FirefoxOptions) {
-            ((FirefoxOptions) options).setCapability("webSocketUrl", true);
-            logger.debug("Enabled monitoring for Firefox");
+            FirefoxOptions firefoxOptions = (FirefoxOptions) options;
+            
+            // Enable BiDi protocol for Firefox
+            firefoxOptions.setCapability("webSocketUrl", true);
+            firefoxOptions.setCapability("moz:debuggerAddress", true);
+            
+            logger.debug("Enabled BiDi monitoring for Firefox");
+            
         } else if (options instanceof EdgeOptions) {
-            ((EdgeOptions) options).setCapability("webSocketUrl", true);
-            logger.debug("Enabled monitoring for Edge");
+            EdgeOptions edgeOptions = (EdgeOptions) options;
+            
+            // Enable BiDi protocol for Edge
+            edgeOptions.setCapability("webSocketUrl", true);
+            edgeOptions.addArguments("--enable-automation");
+            edgeOptions.addArguments("--enable-logging");
+            
+            logger.debug("Enabled BiDi monitoring for Edge");
+            
         } else {
-            logger.warn("Unknown browser options type: {}. Monitoring may not be enabled.", options.getClass().getSimpleName());
+            logger.warn("Unknown browser options type: {}. BiDi monitoring may not be available.", options.getClass().getSimpleName());
         }
         
         return options;

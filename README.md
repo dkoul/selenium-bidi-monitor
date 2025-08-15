@@ -1,15 +1,17 @@
 # SeleniumIQ
 
-A comprehensive monitoring plugin for Selenium WebDriver tests that leverages WebDriver BiDi to capture browser events in real-time and uses Large Language Models (LLM) to generate intelligent suggestions for test optimization, error resolution, and performance improvements.
+A comprehensive monitoring plugin for Selenium WebDriver tests that leverages **WebDriver BiDi protocol** and **Chrome DevTools** to capture real browser events in real-time and uses Large Language Models (LLM) to generate intelligent suggestions for test optimization, error resolution, and performance improvements.
+
+> **🔗 What is BiDi?** WebDriver BiDi enables **bidirectional communication** with browsers, allowing SeleniumIQ to listen to real console logs, network requests, JavaScript exceptions, and performance metrics as they happen. [Learn more about BiDi](BIDI_EXPLAINED.md)
 
 ## Features
 
-### 🚀 **Real-time Browser Event Monitoring**
-- **Console Logs**: Capture JavaScript errors, warnings, and debug messages
-- **Network Requests**: Monitor HTTP requests, responses, and failures
-- **Performance Metrics**: Track page load times, resource usage, and bottlenecks
-- **JavaScript Exceptions**: Detect unhandled errors and promise rejections
-- **Security Violations**: Monitor CSP violations and mixed content warnings
+### 🚀 **Real-time Browser Event Monitoring via BiDi**
+- **Console Logs**: Capture actual JavaScript `console.log()`, `console.error()`, and warnings as they happen
+- **Network Requests**: Monitor real HTTP requests, responses, failures, and timing data  
+- **Performance Metrics**: Track actual page load times, resource usage, and performance bottlenecks
+- **JavaScript Exceptions**: Detect real unhandled errors and promise rejections with stack traces
+- **Security Violations**: Monitor actual CSP violations and mixed content warnings from the browser
 
 ### 🤖 **AI-Powered Analysis**
 - **LLM Integration**: Support for OpenAI GPT-4, Anthropic Claude, Azure OpenAI, and Ollama
